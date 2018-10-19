@@ -1,0 +1,25 @@
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Password reset on localhost:8000
+From: webmaster@localhost
+To: yasukokurata@gmail.com
+Date: Fri, 19 Oct 2018 04:02:33 -0000
+Message-ID: <20181019040233.14568.86522@yasukokurata>
+
+
+You're receiving this email because you requested a password reset for your user account at localhost:8000.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/accounts/reset/MQ/50k-caede2e4dfd54428524a/
+
+Your username, in case you've forgotten: yasuko
+
+Thanks for using our site!
+
+The localhost:8000 team
+
+
+
+-------------------------------------------------------------------------------
