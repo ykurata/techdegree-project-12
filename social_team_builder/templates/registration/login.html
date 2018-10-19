@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% load static from staticfiles %}
+
+{% block title_tag %}Login | {{ block.super }}{% endblock %}
+
+{% block body_content %}
+  <div class="bounds">
+    <div class="grid-30 centered">
+      <h2>Log In</h2>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button-primary">Log In</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

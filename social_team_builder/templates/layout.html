@@ -52,8 +52,12 @@
           <div class="circle--fluid--cell circle--fluid--secondary">
             <nav>
               <ul class="circle--inline">
-                <li><a href="signup.html">Sign Up</a></li>
-                <li><a href="signin.html">Sign In</a></li>
+                {% if user.is_authenticated %}
+                  <li><a href="{% url 'logout' %}">Log Out</a></li>
+                {% else %}
+                  <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
+                  <li><a href="{% url 'login' %}">Log In</a></li>
+                {% endif %}
               </ul>
             </nav>
           </div>
@@ -62,6 +66,6 @@
     </header>
 
     {% block body_content %}{% endblock %}
-    
+
   </body>
 </html>
