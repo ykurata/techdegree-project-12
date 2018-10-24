@@ -7,7 +7,7 @@ urlpatterns = [
     url(r"^$", views.ProjectList.as_view(), name="list"),
 
     url(r"^create_project/$",
-        views.ProjectCreate.as_view(),
+        views.ProjectPositionCreate.as_view(),
         name="create_project"),
 
     url(r"^(?P<pk>\d+)/$",
@@ -24,5 +24,5 @@ urlpatterns = [
 
     url(r"^create_position/$",
         views.PositionCreate.as_view(),
-        name="create_position"),    
+        name="create_position"),
 ]

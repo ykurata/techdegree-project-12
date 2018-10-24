@@ -8,7 +8,7 @@ class Project(models.Model):
     user = models.ForeignKey(User, related_name="project")
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
-    timeline = models.IntegerField()
+    estimated_time = models.IntegerField()
     requirements = models.CharField(max_length=100)
 
     def __str__(self):
@@ -41,7 +41,12 @@ class Position(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     skill = models.CharField(max_length=20, choices=SKILLES_CHOICES, default="")
-    
+    project = models.ForeignKey(
+        Project,
+        related_name="project",
+        default="",
+        on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
 
