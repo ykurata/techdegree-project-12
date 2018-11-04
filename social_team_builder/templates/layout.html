@@ -53,6 +53,7 @@
             <nav>
               <ul class="circle--inline">
                 {% if user.is_authenticated %}
+                  <li><a href="{% url 'accounts:edit' pk=user.id %}">Profile</a></li>
                   <li><a href="{% url 'logout' %}">Log Out</a></li>
                 {% else %}
                   <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>

@@ -22,7 +22,17 @@
               <form method='POST'>
                   {% csrf_token %}
                   {{ form.as_p }}
+                  <div class="circle--project--positions">
+                    <h2>Positions</h2>
+
+                    <ul class="circle--group--list">
+                      {{ position_formset.management_form }}
+                          <li>
+                              {{ position_formset }}
+                          </li>
+                    </ul>
                   <input type="submit" value="Save changes" class="button button-primary">
+                  </div>
               </form>
           </div>
       </div>

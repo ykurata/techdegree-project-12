@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
@@ -5,7 +6,7 @@ from django.db import models
 
 
 class Project(models.Model):
-    user = models.ForeignKey(User, related_name="project")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     estimated_time = models.IntegerField()
@@ -15,7 +16,8 @@ class Project(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("projects:project_detail", kwargs={'pk': self.pk})
+        return reverse("projects:project_detail", kwargs={
+                        'pk': self.pk})
 
 
 class Position(models.Model):
@@ -38,19 +40,15 @@ class Position(models.Model):
         (iOS, "iOS Developer")
     )
 
-    title = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
-    skill = models.CharField(max_length=20, choices=SKILLES_CHOICES, default="")
     project = models.ForeignKey(
         Project,
-        related_name="project",
-        default="",
+        null=True,
+        related_name="position",
         on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+    skill = models.CharField(max_length=20, choices=SKILLES_CHOICES, default="")
+    position_filled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
-
-    """
-    def get_absolute_url(self):
-        return reverse("projects:project_detail", kwargs={'pk':self.pk})
-    """
