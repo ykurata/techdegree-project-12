@@ -19,4 +19,27 @@ class UserCreateForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = models.User
-        fields = ('image', 'bio', 'skill')
+        fields = ('image', 'bio')
+
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = models.Skill
+        fields = ('skill',)
+
+
+SkillFormSet = forms.modelformset_factory(
+    models.Skill,
+    form=SkillForm,
+    extra=1
+)
+
+
+SkillInlineFormSet = forms.inlineformset_factory(
+    models.User,
+    models.Skill,
+    formset=SkillFormSet,
+    fields=('skill',),
+    extra=1,
+    can_delete=False,
+)

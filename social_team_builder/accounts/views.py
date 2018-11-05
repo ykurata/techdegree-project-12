@@ -48,34 +48,67 @@ class ProfileUpdate(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         return reverse('accounts:profile_detail', kwargs={'pk': self.object.pk})
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super(ProfileUpdate, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['skills'] = forms.SkillInlineFormSet(self.request.POST)
+        else:
+            context['skills'] = forms.SkillInlineFormSet()
+        return context
 
-"""
-def edit_profile(request, pk):
+    def form_valid(self, form):
+        context = self.get_context_data()
+        skills_formset = context['skills']
+        if form.is_valid() and skills_formset.is_valid():
+            self.object = form.save(commit=False)
+            self.object.user = self.request.user
+            self.object.save()
+
+            for skill in skills_formset:
+                skill.save()
+        else:
+            context = {'form': form, 'skills_formset': skills_formset}
+        return super(ProfileUpdate, self).form_valid(form)
+
+def profile_update(request, pk):
     try:
         profile = models.User.objects.get(id=pk)
     except models.User.DoesNotExist:
         profile=None
     form = forms.ProfileForm(instance=profile)
+    skill_formset = forms.SkillInlineFormSet(
+        queryset=models.User.objects.none()
+    )
+
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
+        skill_formset = forms.SkillInlineFormSet(
+            request.POST,
+            queryset=models.User.objects.none()
+        )
+
+        if form.is_valid() and skill_formset.is_valid():
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            return HttpResponseRedirect(reverse('accounts:profile_detail'),
-                kwargs={'pk': profile.id })
-    return render(request, 'accounts/user_form.html', {'form': form})
+            skill_formset = skill_formset.save(commit=False)
+            for skill in skill_formset:
+                skill.user = request.user
+                skill.save()
+
+            return redirect('accounts:profile_detail', pk=request.user.id)
+    return render(request, 'accounts/user_form.html', {
+                'form': form,
+                'skill_formset': skill_formset })
 
 
 def profile_detail(request, pk):
-    profile = models.User.objects.get(id=pk)
-    return render(request, 'accounts/profile_detail.html', {'profile': profile})
-"""
+    #profile = models.User.objects.get(id=pk)
+    profile = get_object_or_404(models.User, pk=pk)
+    skills = models.Skill.objects.filter(user=request.user)
+    return render(request, 'accounts/profile_detail.html', {
+            'profile': profile, 'skills': skills })
+
 
 class ProfileDetail(LoginRequiredMixin, generic.DetailView):
     model = models.User

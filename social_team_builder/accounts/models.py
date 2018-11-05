@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -56,7 +57,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=40, unique=True)
     bio = models.CharField(max_length=255, blank=True, default="")
-    skill = models.CharField(max_length=25, choices=SKILLES_CHOICES, default="")
     image = models.ImageField(upload_to="profile_image/", blank=True)
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
@@ -73,8 +73,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
-    """
-    def get_absolute_url(self):
-        return reverse("accounts:profile_detail", kwargs={
-                        'pk': self.pk})
-    """
+
+ANDROID = "Android"
+DESIGN = "Design"
+JAVA = "Java"
+PHP = "PHP"
+PYTHON = "Python"
+RAILS = "Rails"
+WORDPRESS = "Wordpress"
+iOS = "iOS"
+SKILLES_CHOICES = (
+    (ANDROID, "Android"),
+    (DESIGN, "Design"),
+    (JAVA, "Java"),
+    (PHP, "PHP"),
+    (PYTHON, "Python"),
+    (RAILS, "Rails"),
+    (WORDPRESS, "Wordpress"),
+    (iOS, "iOS")
+)
+
+class Skill(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    skill = models.CharField(max_length=20, choices=SKILLES_CHOICES)
+
+    def __str__(self):
+        return self.skill
