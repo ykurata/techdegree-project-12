@@ -36,7 +36,7 @@
       <div class="bounds">
         <div class="circle--fluid">
           <div class="circle--fluid--cell">
-            <h1 class="hide-text circle--logo"><a class="logo" href="index.html">Circle</a></h1>
+            <h1 class="hide-text circle--logo"><a class="logo" href="{% url 'home' %}">Circle</a></h1>
           </div>
           <div class="circle--fluid--cell circle--fluid--primary">
             <div class="circle--search">
@@ -53,7 +53,6 @@
             <nav>
               <ul class="circle--inline">
                 {% if user.is_authenticated %}
-                  <li><a href="{% url 'accounts:edit' pk=user.id %}">Profile</a></li>
                   <li><a href="{% url 'logout' %}">Log Out</a></li>
                 {% else %}
                   <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>
@@ -65,6 +64,17 @@
         </div>
       </div>
     </header>
+
+    <div class="circle--actions--bar">
+        <nav class="bounds">
+            <ul class="circle--pill--list">
+              {% if user.is_authenticated %}
+                <li><a class="selected" href="{% url 'accounts:edit' pk=user.id %}">Profile</a></li>
+                <li><a href="applications.html">Applications</a></li>
+              {% endif %}
+            </ul>
+        </nav>
+    </div>
 
     {% block body_content %}{% endblock %}
 
