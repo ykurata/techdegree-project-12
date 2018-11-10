@@ -1,13 +1,21 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 
 from projects.models import Project, Position
 
 
-class Home(TemplateView):
-    template_name = "index.html"
+class Home(ListView):
+    model = Position
+    template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(Home, self).get_context_data(**kwargs)
+        context['position_list'] = Position.objects.all()
+        return context
 
 
 def home(request):
     positions = Position.objects.all()
-    return render(request, 'home.html', {'positions': positions})
+    #positions = Position.objects.filter(id=position.project.id)
+    return render(request, 'home.html',
+                {'positions': positions })
