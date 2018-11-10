@@ -64,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
     objects = UserManager()
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
@@ -95,7 +96,7 @@ SKILLES_CHOICES = (
 
 class Skill(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
-    skill = models.CharField(max_length=20, choices=SKILLES_CHOICES)
+    name = models.CharField(max_length=20, choices=SKILLES_CHOICES)
 
     def __str__(self):
-        return self.skill
+        return self.name

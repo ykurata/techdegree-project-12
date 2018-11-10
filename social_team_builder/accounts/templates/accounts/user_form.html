@@ -3,15 +3,6 @@
 
 {% block body_content %}
 <form method='POST' enctype="multipart/form-data">
-    <div class="circle--actions--bar">
-        <nav class="bounds">
-            <ul class="circle--pill--list">
-                <li><a href="applications.html">Applications</a></li>
-                <li><a class="selected" href="profile.html">Profile</a></li>
-            </ul>
-        </nav>
-    </div>
-
     <div class="bounds circle--page">
         <div class="circle--page--header circle--fluid">
             <div class="circle--fluid--cell circle--fluid--primary">
@@ -65,15 +56,16 @@
 
             <div class="circle--secondary--module">
                 <h4>My Skills</h4>
-                  {{ skill_formset.management_form }}
                   <ul class="circle--clone--list">
-                      {% for skill in skill_formset %}
-                          <li>
-                              {{ skill }}
-                              <a class="circle--clone--add">Add Skill</a>
-                              <a class="circle--clone--remove">Remove</a>
-                          </li>
-                      {% endfor %}
+                      {{ skill_formset.management_form }}
+                      <li>
+                          {% for skill in skill_formset %}
+                              {{ skill.name }}
+                              {{ skill.id.as_hidden }}
+                          <a class="circle--clone--add">Add Skill</a>
+                          <a class="circle--clone--remove">Remove</a>
+                          {% endfor %}
+                      </li>
                   </ul>
             </div>
 

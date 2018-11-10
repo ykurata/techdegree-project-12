@@ -1,7 +1,7 @@
 from django import forms
-
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
 
 from . import models
 
@@ -9,7 +9,7 @@ from . import models
 class UserCreateForm(UserCreationForm):
     class Meta:
         fields = ("username", "email", "password1", "password2")
-        model =User
+        model = get_user_model()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,7 +25,7 @@ class ProfileForm(forms.ModelForm):
 class SkillForm(forms.ModelForm):
     class Meta:
         model = models.Skill
-        fields = ('skill',)
+        fields = ('name',)
 
 
 SkillFormSet = forms.modelformset_factory(
@@ -39,7 +39,7 @@ SkillInlineFormSet = forms.inlineformset_factory(
     models.User,
     models.Skill,
     formset=SkillFormSet,
-    fields=('skill',),
+    fields=('name',),
     extra=1,
     can_delete=False,
 )

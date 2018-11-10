@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -58,18 +59,21 @@ class ProfileUpdate(LoginRequiredMixin, generic.UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        skills_formset = context['skills']
-        if form.is_valid() and skills_formset.is_valid():
-            self.object = form.save(commit=False)
-            self.object.user = self.request.user
-            self.object.save()
+        skill_formset = context['skills']
+        if form.is_valid() and skill_formset.is_valid():
+            form = form.save(commit=False)
+            form.user = request.user
+            form.save()
 
-            for skill in skills_formset:
+            for skill in skill_formset:
+                skill.user = request.user
                 skill.save()
         else:
-            context = {'form': form, 'skills_formset': skills_formset}
+            context = {'form': form, 'skill_formset': skill_formset}
         return super(ProfileUpdate, self).form_valid(form)
 
+
+@login_required
 def profile_update(request, pk):
     try:
         profile = models.User.objects.get(id=pk)
@@ -77,14 +81,14 @@ def profile_update(request, pk):
         profile=None
     form = forms.ProfileForm(instance=profile)
     skill_formset = forms.SkillInlineFormSet(
-        queryset=models.User.objects.none()
+        queryset=models.Skill.objects.filter(user=request.user)
     )
 
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
         skill_formset = forms.SkillInlineFormSet(
             request.POST,
-            queryset=models.User.objects.none()
+            queryset=models.Skill.objects.filter(user=request.user)
         )
 
         if form.is_valid() and skill_formset.is_valid():
@@ -102,6 +106,7 @@ def profile_update(request, pk):
                 'skill_formset': skill_formset })
 
 
+@login_required
 def profile_detail(request, pk):
     #profile = models.User.objects.get(id=pk)
     profile = get_object_or_404(models.User, pk=pk)
