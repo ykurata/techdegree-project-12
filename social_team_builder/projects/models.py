@@ -52,3 +52,14 @@ class Position(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Application(models.Model):
+    applicant = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="applicaion")
+    position = models.ForeignKey(Position)
+    status = models.CharField(max_length=20)
+
+    def __str__(self):
+        return "{}, {}".format(self.applicant, self.position)

@@ -25,14 +25,16 @@
                   <div class="circle--project--positions">
                     <h2>Positions</h2>
                         {{ position_formset.management_form }}
-                        <ul class="circle--group--list">
-                              {% for position in position_formset %}
-                              <li>
-                                  {{ position }}
-                              </li>
-                              {% endfor %}
-                        </ul>
-                  <input type="submit" value="Save changes" class="button button-primary">
+                        {% for position in position_formset %}
+                            <ul class="circle--group--list">
+                                <li>
+                                    {{ position }}
+                                </li>
+                                <a class="circle--clone--add">Add Position</a>
+                                <a class="circle--clone--remove">Remove</a>
+                            </ul>
+                        {% endfor %}
+                        <input type="submit" value="Save changes" class="button button-primary">
                   </div>
               </form>
           </div>

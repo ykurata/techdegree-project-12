@@ -29,6 +29,7 @@ PositionFormSet = forms.modelformset_factory(
     models.Position,
     form=PositionForm,
     extra=1,
+    max_num=1,
 )
 
 PositionInlineFormSet = forms.inlineformset_factory(
@@ -37,5 +38,15 @@ PositionInlineFormSet = forms.inlineformset_factory(
     formset=PositionFormSet,
     fields=("title", "description", "skill", "position_filled"),
     extra=1,
+    max_num=1,
     can_delete=False,
 )
+
+
+class ApplicationForm(forms.ModelForm):
+    model = models.Application
+    fields = [
+        'applicant',
+        'position',
+        'status'
+    ]

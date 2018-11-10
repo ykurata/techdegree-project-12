@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, Position
+from .models import Project, Position, Application
 
 
 class PositionInline(admin.StackedInline):
@@ -13,3 +13,4 @@ class ProjectAdmin(admin.ModelAdmin):
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Position)
+admin.site.register(Application)

@@ -4,70 +4,77 @@
 {% block body_content %}
 
 <div class="circle--actions--bar">
-  <div class="bounds">
-    <div class="grid-100">
-      <a class="button" href="project_edit.html">Edit Project</a>
-      <a class="button button-text" href="index.html">Delete Project</a>
+    <div class="bounds">
+        {% if project.user == request.user %}
+            <div class="grid-100">
+                <a class="button" href="{% url "projects:project_edit" pk=project.pk %}">Edit Project</a>
+                <a class="button button-text" href="index.html">Delete Project</a>
+            </div>
+        {% endif %}
     </div>
-  </div>
+
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
 </div>
 
 <div class="bounds circle--page circle--article">
-  <div class="grid-70">
-    <div class="circle--article--header">
-      <h4 class="circle--article--section">Project</h4>
-      <h1 class="circle--article--title">{{ project.title }}</h1>
-      <p class="circle--article--byline">Project Owner: <a>{{ user.username }}</a></p>
+    <div class="grid-70">
+        <div class="circle--article--header">
+            <h4 class="circle--article--section">Project</h4>
+            <h1 class="circle--article--title">{{ project.title }}</h1>
+            <p class="circle--article--byline">Project Owner: <a>{{ project.user }}</a></p>
+        </div>
+
+        <div class="circle--article--body">
+            {{ project.description }}
+        </div>
+
+
+        <div class="circle--project--positions">
+            <h2>Positions</h2>
+
+            <ul class="circle--group--list">
+              {% for position in positions %}
+                  <li>
+                      <h3>{{ position.title }}</h3>
+                      <p>{{ position.description }}</p>
+                      {% if project.user != request.user %}
+                      <a class="button button-primary" href="{% url "projects:apply" pk=project.pk %}">
+                          {% if position.status == "filled" %}
+                              filled
+                          {% else %}
+                              Apply
+                          {% endif %}
+                      </a>
+                      {% endif %}
+                  </li>
+              {% endfor %}
+            </ul>
+
+        </div>
     </div>
 
-    <div class="circle--article--body">
-      {{ project.description }}
+    <div class="grid-25 grid-push-5">
+        <div class="circle--secondary--module">
+            <h3>Project Needs</h3>
+
+            <ul class="circle--link--list">
+                {% for position in positions %}
+                    <li><a>{{ position.skill }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="circle--secondary--module">
+            <h3>Project Timeline</h3>
+            <p>{{ project.estimated_time }} hours</p>
+        </div>
+
+        <div class="circle--secondary--module">
+            <h3>Applicant Requirements</h3>
+            <p>{{ project.requirements }}.</p>
+        </div>
     </div>
-
-
-    <div class="circle--project--positions">
-      <h2>Positions</h2>
-      <ul class="circle--group--list">
-        <li>
-        {% for position in positions %}
-          <h3>{{ position.title }}</h3>
-          <p>{{ position.description }}</p>
-        {% endfor %}
-          <a class="button button-primary">Apply</a>
-        </li>
-        <li>
-          <h3></h3>
-          <p></p>
-          <a class="button button-primary button-inactive">Position Filled</a>
-        </li>
-
-      </ul>
-
-    </div>
-
-  </div>
-
-  <div class="grid-25 grid-push-5">
-    <div class="circle--secondary--module">
-      <h3>Project Needs</h3>
-
-      <ul class="circle--link--list">
-        {% for position in positions %}
-          <li><a>{{ position.skill }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
-
-    <div class="circle--secondary--module">
-      <h3>Project Timeline</h3>
-      <p>{{ project.estimated_time }} hours</p>
-    </div>
-
-    <div class="circle--secondary--module">
-      <h3>Applicant Requirements</h3>
-        <p>{{ project.requirements }}.</p>
-    </div>
-
-  </div>
 </div>
 {% endblock %}
