@@ -41,12 +41,3 @@ PositionInlineFormSet = forms.inlineformset_factory(
     max_num=1,
     can_delete=False,
 )
-
-
-class ApplicationForm(forms.ModelForm):
-    model = models.Application
-    fields = [
-        'applicant',
-        'position',
-        'status'
-    ]

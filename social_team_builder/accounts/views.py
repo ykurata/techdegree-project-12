@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import generic
 from PIL import Image
 
-
+from projects.models import Position
 from . import forms
 from . import models
 
@@ -40,37 +40,6 @@ class SignUp(generic.CreateView):
     form_class = forms.UserCreateForm
     success_url = reverse_lazy('login')
     template_name = 'accounts/signup.html'
-
-
-class ProfileUpdate(LoginRequiredMixin, generic.UpdateView):
-    form_class = forms.ProfileForm
-    model = models.User
-
-    def get_success_url(self):
-        return reverse('accounts:profile_detail', kwargs={'pk': self.object.pk})
-
-    def get_context_data(self, **kwargs):
-        context = super(ProfileUpdate, self).get_context_data(**kwargs)
-        if self.request.POST:
-            context['skills'] = forms.SkillInlineFormSet(self.request.POST)
-        else:
-            context['skills'] = forms.SkillInlineFormSet()
-        return context
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        skill_formset = context['skills']
-        if form.is_valid() and skill_formset.is_valid():
-            form = form.save(commit=False)
-            form.user = request.user
-            form.save()
-
-            for skill in skill_formset:
-                skill.user = request.user
-                skill.save()
-        else:
-            context = {'form': form, 'skill_formset': skill_formset}
-        return super(ProfileUpdate, self).form_valid(form)
 
 
 @login_required
@@ -110,9 +79,10 @@ def profile_update(request, pk):
 def profile_detail(request, pk):
     #profile = models.User.objects.get(id=pk)
     profile = get_object_or_404(models.User, pk=pk)
-    skills = models.Skill.objects.filter(user=request.user)
+    skills = models.Skill.objects.filter(user_id=pk)
+    positions = Position.objects.filter(project__user_id=pk)
     return render(request, 'accounts/profile_detail.html', {
-            'profile': profile, 'skills': skills })
+            'profile': profile, 'skills': skills, 'positions': positions})
 
 
 class ProfileDetail(LoginRequiredMixin, generic.DetailView):

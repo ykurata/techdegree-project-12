@@ -54,18 +54,31 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="clickable-row" data-href="profile.html">
-                    <td>
-                        {% for application in applications %}
-                        <h3>{{ application.applicant }}</h3>
-                        {% endfor %}
-                        <p>Currency Calculator</p>
-                    </td>
-                    <td class="circle--cell--right">
-                        <span class="secondary-label">Rails Developer</span>
-                    </td>
-
-                </tr>
+                {% for application in applications %}
+                    {% if application.applicant != request.user %}
+                        <tr class="clickable-row" data-href="{% url "accounts:profile_detail" pk=application.applicant.pk %}">
+                            <td>
+                                <h3>{{ application.applicant }}</h3>
+                                <p>{{ application.position.project.title }}</p>
+                            </td>
+                            <td class="circle--cell--right">
+                                <span class="secondary-label">{{ application.position.title }}</span>
+                            </td>
+                            <td>
+                                {% if application.status == "new" %}
+                                    <a class="button button-primary" href="{% url 'projects:accept' pk=application.pk %}">Accept</a>
+                                {% endif %}
+                                {% if application.status == "accept" %}
+                                    <a class="button button-primary button-inactive">Accepted</a>
+                                {% elif application.status == "reject" %}
+                                    <a class="button button-primary button-inactive">Rejected</a>
+                                {% else %}
+                                    <a class="button button-primary" href="{% url 'projects:reject' pk=application.pk %}">Reject</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             </tbody>
         </table>
     </div>

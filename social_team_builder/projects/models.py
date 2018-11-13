@@ -57,9 +57,22 @@ class Position(models.Model):
 class Application(models.Model):
     applicant = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="applicaion")
+        related_name="applicaion"
+    )
     position = models.ForeignKey(Position)
     status = models.CharField(max_length=20)
 
     def __str__(self):
         return "{}, {}".format(self.applicant, self.position)
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="notification"
+    )
+    application = models.ForeignKey(Application)
+    message = models.CharField(max_length=50)
+
+    def __str__(self):
+        return str(self.user)

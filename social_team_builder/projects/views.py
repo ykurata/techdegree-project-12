@@ -1,5 +1,3 @@
-
-from itertools import chain
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -18,17 +16,20 @@ from django.views import generic
 
 from . import models
 from . import forms
+from accounts.models import Skill
+
 
 
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(project__id=pk)
+    application = models.Application.objects.filter(applicant_id=request.user.id)
 
     return render(
         request,
         'projects/project_detail.html',
-        {'project': project, 'positions': positions})
+        {'project': project, 'positions': positions, 'application': application})
 
 
 @login_required
@@ -117,62 +118,45 @@ def apply(request, pk):
         return redirect("projects:project_detail", pk=pk)
 
 
-class ApplicationList(LoginRequiredMixin, generic.ListView):
-    context_object_name = "applications"
-    model = models.Application
+@login_required
+def application_list(request):
+    applications = models.Application.objects.all()
+    return render(request, 'projects/application_list.html',
+                {'applications': applications})
 
 
-class ApplyProject(LoginRequiredMixin, generic.RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return redirect("projects:project_detail",
-                        kwargs={"pk": self.kwargs.get("pk")})
-
-    def get(self, request, *args, **kwargs):
-        try:
-            position = get_object_or_404(models.Position,
-                                    pk=self.kwargs.get('position_pk'))
-        except models.Position.DoesNotExist:
-            messages.warning(
-                self.request,
-                "You can't apply to this position!"
-            )
-        else:
-            models.Application.objects.create(
-                applicant=self.request.user,
-                position=position,
-            )
-            messages.success(
-                self.request,
-                "You apply to the position!"
-            )
-        return super().get(request, *args, **kwargs)
+def accept_application(request, pk):
+    application = get_object_or_404(models.Application, pk=pk)
+    application.status = "accept"
+    application.position.status = True
+    application.save()
+    models.Notification.objects.create(
+        user=application.applicant,
+        application=application,
+        message="Your application for {} is approved.".format(
+                                                    application.position)
+    )
+    return redirect("projects:application")
 
 
-class ProjectPositionCreate(generic.CreateView):
-    model = models.Project
-    fields = ("title", "description", "estimated_time", "requirements")
-    sucess_url = reverse_lazy("projects:list")
+def reject_application(request, pk):
+    application = get_object_or_404(models.Application, pk=pk)
+    application.status = "reject"
+    application.save()
+    models.Notification.objects.create(
+        user=application.applicant,
+        application=application,
+        message="Your application for {} is rejected.".format(
+                                                    application.position)
+    )
+    return redirect("projects:application")
 
-    def get_context_data(self, **kwargs):
-        data = super(ProjectPositionCreate, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data['positions'] = forms.PositionInlineFormSet(self.request.POST)
-        else:
-            data['positions'] = forms.PositionInlineFormSet()
-        return data
 
-    def form_valid(self, form):
-        context = self.get_context_data()
-        positions_formset = context['positions']
-
-        if form.is_valid() and positions_formset.is_valid():
-            self.object = form.save(commit=False)
-            #self.object = positions_formset.save(commit=False)
-            self.object.user = self.request.user
-            self.object.save()
-
-            for position in positions_formset:
-                position.save()
-        else:
-            context = {'form': form, 'positions_formset': formset}
-        return super(ProjectPositionCreate, self).form_valid(form)
+def notification(request):
+    try:
+        notifications = models.Notification.objects.filter(user=request.user)
+    except ObjectDoesNotExist:
+        messages.warning(request, "There is no notification.")
+    else:
+        return render(request, "projects/notification.html",
+                    {'notifications': notifications })

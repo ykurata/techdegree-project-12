@@ -34,29 +34,10 @@ class UserManager(BaseUserManager):
         return user
 
 
-ANDROID = "Android"
-DESIGN = "Design"
-JAVA = "Java"
-PHP = "PHP"
-PYTHON = "Python"
-RAILS = "Rails"
-WORDPRESS = "Wordpress"
-iOS = "iOS"
-SKILLES_CHOICES = (
-    (ANDROID, "Android Developer"),
-    (DESIGN, "Designer"),
-    (JAVA, "Java Developer"),
-    (PHP, "PHP Developer"),
-    (PYTHON, "Python Developer"),
-    (RAILS, "Rails Developer"),
-    (WORDPRESS, "Wordpress Developer"),
-    (iOS, "iOS Developer")
-)
-
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=40, unique=True)
-    bio = models.CharField(max_length=255, blank=True, default="")
+    bio = models.TextField(max_length=500, blank=True, default="")
     image = models.ImageField(upload_to="profile_image/", blank=True)
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
@@ -64,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
     objects = UserManager()
-    
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 

@@ -69,8 +69,9 @@
         <nav class="bounds">
             <ul class="circle--pill--list">
               {% if user.is_authenticated %}
-                <li><a class="selected" href="{% url 'accounts:edit' pk=user.id %}">Profile</a></li>
-                <li><a href="applications.html">Applications</a></li>
+                <li><a href="{% url 'accounts:profile_detail' pk=user.id %}">Profile</a></li>
+                <li><a href="{% url 'projects:application' %}">Applications</a></li>
+                <li><a href="{% url 'projects:notification' %}">Notifications</a></li>
               {% endif %}
             </ul>
         </nav>

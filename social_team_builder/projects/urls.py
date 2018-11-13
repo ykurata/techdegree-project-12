@@ -13,4 +13,19 @@ urlpatterns = [
     #url(r"^(?P<pk>\d+)/apply/$", views.ApplyProject.as_view(), name="apply"),
     url(r"^(?P<pk>\d+)/apply/$", views.apply, name="apply"),
 
+    url(r"^application/$",
+        views.application_list,
+        name="application"),
+
+    url(r"^application/(?P<pk>\d+)/accept/$",
+        views.accept_application,
+        name="accept"),
+
+    url(r"^application/(?P<pk>\d+)/reject/$",
+        views.reject_application,
+        name="reject"),
+
+    url(r"^notification/$",
+        views.notification,
+        name="notification")
 ]
