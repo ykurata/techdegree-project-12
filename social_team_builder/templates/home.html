@@ -44,13 +44,17 @@
                   </tr>
               </thead>
               <tbody>
-                  {% for position in position_list %}
-                      <tr class="clickable-row" data-href="{% url "projects:project_detail" pk=position.project.pk %}">
+                  {% for project in project_list %}
+                      <tr class="clickable-row" data-href="{% url "projects:project_detail" pk=project.pk %}">
                           <td>
-                              <h3>{{ position.project.title }}</h3></a>
+                              <h3>{{ project.title }}</h3></a>
                           </td>
                           <td class="circle--cell--right">
-                              <span class="secondary-label">{{ position.title }}</span>
+                              {% for position in project.positions.all %}
+                                  {% if position.position_filled != True %}
+                                      <span class="secondary-label">{{ position.title }}</span>
+                                  {% endif %}
+                              {% endfor %}
                           </td>
                       </tr>
                   {% endfor %}

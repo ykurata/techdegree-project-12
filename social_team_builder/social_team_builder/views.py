@@ -5,17 +5,21 @@ from projects.models import Project, Position
 
 
 class Home(ListView):
-    model = Position
+    model = Project
     template_name = "home.html"
 
+    def get_queryset(self):
+        return Project.objects.all().prefetch_related('positions')
+
+    """
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
         context['position_list'] = Position.objects.all()
         return context
-
+    """
 
 def home(request):
-    positions = Position.objects.all()
-    #positions = Position.objects.filter(id=position.project.id)
+    projects = Project.objects.prefetch_related('position')
+
     return render(request, 'home.html',
-                {'positions': positions })
+                {'projects': projects})

@@ -43,7 +43,7 @@ class Position(models.Model):
     project = models.ForeignKey(
         Project,
         null=True,
-        related_name="position",
+        related_name="positions",
         on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
