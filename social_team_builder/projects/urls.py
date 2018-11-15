@@ -10,8 +10,9 @@ urlpatterns = [
 
     url(r"^(?P<pk>\d+)/edit/$", views.edit_project, name="project_edit"),
 
-    #url(r"^(?P<pk>\d+)/apply/$", views.ApplyProject.as_view(), name="apply"),
     url(r"^(?P<pk>\d+)/apply/$", views.apply, name="apply"),
+
+    #url(r"search/$", views.search, name="search"),
 
     url(r"^application/$",
         views.application_list,

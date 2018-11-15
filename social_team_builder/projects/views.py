@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import(
     PermissionRequiredMixin
 )
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 
@@ -160,3 +160,12 @@ def notification(request):
     else:
         return render(request, "projects/notification.html",
                     {'notifications': notifications })
+
+"""
+def search(request):
+    term = request.GET.get('q', '')
+    project_list = models.Project.objects.filter(
+        Q(title__icontains=term) | Q(description__icontains=term)
+    )
+    return render(request, 'projects/search.html', {'project_list': project_list })
+"""
