@@ -124,12 +124,12 @@ def apply(request, position_pk, pk):
         messages.success(request, "You've applyed for {}!".format(position.title))
         return HttpResponseRedirect(reverse(
                 "projects:project_detail",
-                args=[pk]))
+                kwargs={'pk': pk}))
     else:
         messages.warning(request, "You've already applyed for this position!")
         return HttpResponseRedirect(reverse(
                 "projects:project_detail",
-                args=[pk]))
+                kwargs={'pk': pk}))
 
 
 @login_required
