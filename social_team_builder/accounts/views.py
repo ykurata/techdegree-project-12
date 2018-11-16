@@ -77,7 +77,6 @@ def profile_update(request, pk):
 
 @login_required
 def profile_detail(request, pk):
-    #profile = models.User.objects.get(id=pk)
     profile = get_object_or_404(models.User, pk=pk)
     skills = models.Skill.objects.filter(user_id=pk)
     positions = Position.objects.filter(project__user_id=pk)
