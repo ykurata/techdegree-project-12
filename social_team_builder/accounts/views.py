@@ -13,6 +13,7 @@ from projects.models import Position
 from . import forms
 from . import models
 
+
 class LoginView(generic.FormView):
     form_class = AuthenticationForm
     success_url = 'home'
@@ -49,13 +50,13 @@ def profile_update(request, pk):
     except models.User.DoesNotExist:
         profile=None
     form = forms.ProfileForm(instance=profile)
-    skill_formset = forms.SkillInlineFormSet(
+    skill_formset = forms.SkillFormSet(
         queryset=models.Skill.objects.filter(user=request.user)
     )
 
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
-        skill_formset = forms.SkillInlineFormSet(
+        skill_formset = forms.SkillFormSet(
             request.POST,
             queryset=models.Skill.objects.filter(user=request.user)
         )
