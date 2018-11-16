@@ -108,8 +108,8 @@ def delete_project(request, pk):
 
 
 @login_required
-def apply(request, pk):
-    position = get_object_or_404(models.Position, pk=pk)
+def apply(request, position_pk, pk):
+    position = get_object_or_404(models.Position, pk=position_pk)
     try:
         models.Application.objects.get(
             applicant=request.user,
@@ -121,18 +121,23 @@ def apply(request, pk):
             position=position,
             status="new"
         )
-        messages.success(request, "You've applyed to {}!".format(position.title))
-        return redirect("projects:project_detail", pk=pk)
+        messages.success(request, "You've applyed for {}!".format(position.title))
+        return HttpResponseRedirect(reverse(
+                "projects:project_detail",
+                args=[pk]))
     else:
-        messages.warning(request, "You've already applyed to this position!")
-        return redirect("projects:project_detail", pk=pk)
+        messages.warning(request, "You've already applyed for this position!")
+        return HttpResponseRedirect(reverse(
+                "projects:project_detail",
+                args=[pk]))
 
 
 @login_required
 def application_list(request):
     applications = models.Application.objects.all()
+    projects = models.Project.objects.filter(user=request.user)
     return render(request, 'projects/application_list.html',
-                {'applications': applications})
+                {'applications': applications, 'projects': projects })
 
 
 def accept_application(request, pk):

@@ -41,10 +41,10 @@
                         {% if project.user != request.user %}
                             {% if position.position_filled == True %}
                                 <a class="button button-primary button-inactive">Position Filled</a>
-                            {% elif project.user in position.applicants.all %}
+                            {% elif request.user in position.applicants.all %}
                                 <a class="button button-primary button-inactive">Applied</a>
                             {% else %}
-                                <a class="button button-primary" href="{% url "projects:apply" pk=project.pk %}">Apply</a>
+                                <a class="button button-primary" href="{% url "projects:apply" pk=project.pk position_pk=position.pk %}">Apply</a>
                             {% endif %}
                         {% endif %}
                     </li>
