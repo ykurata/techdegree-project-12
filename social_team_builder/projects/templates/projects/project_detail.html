@@ -8,7 +8,7 @@
         {% if project.user == request.user %}
             <div class="grid-100">
                 <a class="button" href="{% url "projects:project_edit" pk=project.pk %}">Edit Project</a>
-                <a class="button button-text" href="index.html">Delete Project</a>
+                <a class="button" href="{% url "projects:delete" pk=project.pk %}">Delete Project</a>
             </div>
         {% endif %}
         {% for message in messages %}
@@ -34,19 +34,21 @@
             <h2>Positions</h2>
 
             <ul class="circle--group--list">
-              {% for position in positions %}
-                  <li>
-                      <h3>{{ position.title }}</h3>
-                      <p>{{ position.description }}</p>
-                      {% if project.user != request.user %}
-                          {% if position.position_filled == True %}
-                              <a class="button button-primary button-inactive">Position Filled</a>
-                          {% else %}
-                              <a class="button button-primary" href="{% url "projects:apply" pk=project.pk %}">Apply</a>
-                          {% endif %}
-                      {% endif %}
-                  </li>
-              {% endfor %}
+                {% for position in positions %}
+                    <li>
+                        <h3>{{ position.title }}</h3>
+                        <p>{{ position.description }}</p>
+                        {% if project.user != request.user %}
+                            {% if position.position_filled == True %}
+                                <a class="button button-primary button-inactive">Position Filled</a>
+                            {% elif project.user in position.applicants.all %}
+                                <a class="button button-primary button-inactive">Applied</a>
+                            {% else %}
+                                <a class="button button-primary" href="{% url "projects:apply" pk=project.pk %}">Apply</a>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
             </ul>
 
         </div>

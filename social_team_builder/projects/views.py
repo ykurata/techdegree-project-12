@@ -24,7 +24,9 @@ from accounts.models import Skill
 def project_detail(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(project__id=pk)
-    application = models.Application.objects.filter(applicant_id=request.user.id)
+    user_applications = models.Application.objects.filter(applicant=request.user)
+    application = [app.position.pk
+                    for app in user_applications]
 
     return render(
         request,
@@ -98,6 +100,14 @@ def edit_project(request, pk):
 
 
 @login_required
+def delete_project(request, pk):
+    project = get_object_or_404(models.Project, pk=pk)
+    project.delete()
+    messages.success(request, "{} is deleted.".format(project.title))
+    return redirect('home')
+
+
+@login_required
 def apply(request, pk):
     position = get_object_or_404(models.Position, pk=pk)
     try:
@@ -160,12 +170,3 @@ def notification(request):
     else:
         return render(request, "projects/notification.html",
                     {'notifications': notifications })
-
-"""
-def search(request):
-    term = request.GET.get('q', '')
-    project_list = models.Project.objects.filter(
-        Q(title__icontains=term) | Q(description__icontains=term)
-    )
-    return render(request, 'projects/search.html', {'project_list': project_list })
-"""

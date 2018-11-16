@@ -6,6 +6,9 @@
       <div class="circle--page--header circle--fluid">
           <div class="circle--fluid--cell circle--fluid--primary">
 
+              {% for message in messages %}
+                  {{ message }}
+              {% endfor %}
               <h2>Projects</h2>
           </div>
           <div class="circle--fluid--cell circle--fluid--secondary">
