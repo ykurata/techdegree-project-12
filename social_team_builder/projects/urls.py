@@ -19,6 +19,9 @@ urlpatterns = [
     url(r"^application/(?P<pk>\d+)/reject/$",
         views.reject_application,
         name="reject"),
+    url(r"^application/accept/$", views.accept_application_list, name="accept_application"),
+    url(r"^application/reject/$", views.reject_application_list, name="reject_application"),
+    url(r"^application/new/$", views.new_application_list, name="new_application"),          
     url(r"^notification/$",
         views.notification,
         name="notification")

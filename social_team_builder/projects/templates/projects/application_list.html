@@ -12,10 +12,10 @@
         <div class="circle--filter circle--secondary--module">
             <h4>Status</h4>
             <ul class="circle--filter--list">
-                <li><a class="selected">All Applications</a></li>
-                <li><a>New Applications</a></li>
-                <li><a>Accepted</a></li>
-                <li><a>Rejected</a></li>
+                <li><a class="selected" href="{% url 'projects:application' %}">All Applications</a></li>
+                <li><a href="{% url 'projects:new_application' %}">New Applications</a></li>
+                <li><a href="{% url 'projects:accept_application' %}">Accepted</a></li>
+                <li><a href="{% url 'projects:reject_application' %}">Rejected</a></li>
             </ul>
         </div>
 
