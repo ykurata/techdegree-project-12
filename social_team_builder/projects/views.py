@@ -24,11 +24,16 @@ from accounts.models import Skill
 def project_detail(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(project_id=pk)
+    application = models.Application.objects.filter(
+                    applicant=request.user,
+                    position__project__id=pk)
 
     return render(
         request,
-        'projects/project_detail.html',
-        {'project': project, 'positions': positions })
+        'projects/project_detail.html', {
+        'project': project,
+        'positions': positions,
+        'application': application })
 
 
 @login_required
