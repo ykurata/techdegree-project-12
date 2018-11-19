@@ -82,8 +82,8 @@ def profile_detail(request, pk):
     skills = models.Skill.objects.filter(user_id=pk)
     projects = Project.objects.filter(user_id=pk)
     applications = Application.objects.filter(
-        applicant=request.user,
-        status='accept')
+                        applicant=request.user,
+                        status='accept')
     return render(request, 'accounts/profile_detail.html', {
             'profile': profile,
             'skills': skills,
