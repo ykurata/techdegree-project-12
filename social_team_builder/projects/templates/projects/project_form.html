@@ -2,42 +2,48 @@
 {% load static from staticfiles %}
 
 {% block body_content %}
-  <div class="circle--actions--bar">
-      <div class="bounds">
-          <div class="grid-100">
-              <a class="button" href="project_edit.html">Edit Project</a>
-              <a class="button button-text" href="index.html">Delete Project</a>
-          </div>
-      </div>
-  </div>
+<form method="POST">
+    <div class="circle--actions--bar">
+        <div class="bounds">
+            <div class="grid-100">
+                <input type="submit" class="button button-primary" value="Save Project"/>
+                <a class="button button-text" href="{% url 'home' %}">Discard</a>
+            </div>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    </div>
 
-  <div class="bounds circle--page circle--article">
-      <div class="grid-70">
-          <div class="circle--page--header circle--fluid">
-              <div class="circle--project--positions">
-                  <h2>Project</h2>
-              </div>
-          </div>
-          <div class="circle--article--body">
-              <form method='POST'>
-                  {% csrf_token %}
-                  {{ form.as_p }}
-                  <div class="circle--project--positions">
-                    <h2>Positions</h2>
-                        {{ position_formset.management_form }}
+    <div class="bounds circle--page circle--article">
+        <div class="grid-70">
+            <div class="circle--article--body">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </div>
+
+            <div class="circle--project--positions">
+                <h2>Positions</h2>
+
+                {{ position_formset.management_form }}
+                    <ul class="circle--group--list circle--clone--list">
                         {% for position in position_formset %}
-                            <ul class="circle--group--list">
-                                <li>
-                                    {{ position }}
-                                </li>
+                            <li>
+                                {{ position }}
+                                <br>
                                 <a class="circle--clone--add">Add Position</a>
                                 <a class="circle--clone--remove">Remove</a>
-                            </ul>
+                            </li>
                         {% endfor %}
-                        <input type="submit" value="Save changes" class="button button-primary">
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
+                    </ul>
+                    <input type="submit" value="Save Project" class="button button-primary">
+
+            </div>
+        </div>
+
+        <div class="grid-25 grid-push-5">
+
+        </div>
+    </div>
+</form>
 {% endblock %}

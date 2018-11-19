@@ -23,27 +23,24 @@ from accounts.models import Skill
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
-    positions = models.Position.objects.filter(project__id=pk)
-    user_applications = models.Application.objects.filter(applicant=request.user)
-    application = [app.position.pk
-                    for app in user_applications]
+    positions = models.Position.objects.filter(project_id=pk)
 
     return render(
         request,
         'projects/project_detail.html',
-        {'project': project, 'positions': positions, 'application': application})
+        {'project': project, 'positions': positions })
 
 
 @login_required
 def create_project(request, pk=None):
     form = forms.ProjectForm()
-    position_formset = forms.PositionInlineFormSet(
+    position_formset = forms.PositionFormSet(
         queryset=models.Position.objects.none()
     )
 
     if request.method == 'POST':
         form = forms.ProjectForm(request.POST)
-        position_formset = forms.PositionInlineFormSet(
+        position_formset = forms.PositionFormSet(
             request.POST,
             queryset=models.Position.objects.none()
         )
@@ -67,19 +64,19 @@ def create_project(request, pk=None):
 @login_required
 def edit_project(request, pk):
     try:
-        project = models.Project.objects.get(pk=pk)
-    except models.Project.DoesNotExist:
-        project=None
+        project = get_object_or_404(models.Project, pk=pk)
+    except ObjectDoesNotExist:
+        project = None
     form = forms.ProjectForm(instance=project)
-    position_formset = forms.PositionInlineFormSet(
-        queryset=models.Position.objects.filter(pk=project.pk)
+    position_formset = forms.PositionFormSet(
+        queryset=models.Position.objects.filter(project_id=pk)
     )
 
     if request.method == 'POST':
         form = forms.ProjectForm(request.POST, instance=project)
-        position_formset = forms.PositionInlineFormSet(
+        position_formset = forms.PositionFormSet(
             request.POST,
-            queryset=models.Position.objects.filter(pk=project.pk)
+            queryset=models.Position.objects.filter(project_id=pk)
         )
 
         if form.is_valid() and position_formset.is_valid():
@@ -90,7 +87,6 @@ def edit_project(request, pk):
             for position in position_formset:
                 position.project = project
                 position.save()
-            #return redirect('accounts:profile_detail', pk=request.user.id)
             return HttpResponseRedirect(reverse("home"))
 
     return render(request, 'projects/project_form.html', {

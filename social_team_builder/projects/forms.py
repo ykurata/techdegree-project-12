@@ -14,6 +14,7 @@ class ProjectForm(forms.ModelForm):
         ]
 
 
+
 class PositionForm(forms.ModelForm):
     class Meta:
         model = models.Position
@@ -29,7 +30,6 @@ PositionFormSet = forms.modelformset_factory(
     models.Position,
     form=PositionForm,
     extra=1,
-    max_num=1,
 )
 
 PositionInlineFormSet = forms.inlineformset_factory(
@@ -37,7 +37,5 @@ PositionInlineFormSet = forms.inlineformset_factory(
     models.Position,
     formset=PositionFormSet,
     fields=("title", "description", "skill", "position_filled"),
-    extra=1,
-    max_num=1,
     can_delete=False,
 )

@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import generic
 from PIL import Image
 
-from projects.models import Position
+from projects.models import Position, Project, Application
 from . import forms
 from . import models
 
@@ -80,9 +80,15 @@ def profile_update(request, pk):
 def profile_detail(request, pk):
     profile = get_object_or_404(models.User, pk=pk)
     skills = models.Skill.objects.filter(user_id=pk)
-    positions = Position.objects.filter(project__user_id=pk)
+    projects = Project.objects.filter(user_id=pk)
+    applications = Application.objects.filter(
+        applicant=request.user,
+        status='accept')
     return render(request, 'accounts/profile_detail.html', {
-            'profile': profile, 'skills': skills, 'positions': positions})
+            'profile': profile,
+            'skills': skills,
+            'projects': projects ,
+            'applications': applications })
 
 
 class ProfileDetail(LoginRequiredMixin, generic.DetailView):
