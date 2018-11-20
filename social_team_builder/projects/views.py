@@ -24,18 +24,12 @@ from accounts.models import Skill
 def project_detail(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(project_id=pk)
-    """
-    application = models.Application.objects.filter(
-                    applicant=request.user,
-                    status__in=["new", "accept", "reject"],
-                    position__project__id=pk)
-    """
+
     return render(
         request,
         'projects/project_detail.html', {
         'project': project,
-        'positions': positions,
-        'application': application })
+        'positions': positions })
 
 
 @login_required
@@ -149,8 +143,10 @@ def accept_application_list(request):
     applications = models.Application.objects.filter(
         status="accept",
         position__project__user=request.user)
+    projects = models.Project.objects.filter(user=request.user)
     return render(request, 'projects/application_list.html', {
-            'applications': applications })
+            'applications': applications,
+            'projects': projects })
 
 
 @login_required
@@ -158,8 +154,10 @@ def reject_application_list(request):
     applications = models.Application.objects.filter(
         status="reject",
         position__project__user=request.user)
+    projects = models.Project.objects.filter(user=request.user)
     return render(request, 'projects/application_list.html', {
-            'applications': applications })
+            'applications': applications,
+            'projects': projects })
 
 
 @login_required
@@ -167,8 +165,10 @@ def new_application_list(request):
     applications = models.Application.objects.filter(
         status="new",
         position__project__user=request.user)
+    projects = models.Project.objects.filter(user=request.user)
     return render(request, 'projects/application_list.html', {
-            'applications': applications })
+            'applications': applications,
+            'projects': projects })
 
 
 def accept_application(request, pk):

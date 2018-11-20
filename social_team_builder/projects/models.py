@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from django.db import models
 
+from markdown_deux import markdown
+
 
 class Project(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
@@ -46,7 +48,7 @@ class Position(models.Model):
         related_name="positions",
         on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
+    description = models.TextField(max_length=500)
     skill = models.CharField(max_length=20, choices=SKILLES_CHOICES, default="")
     position_filled = models.BooleanField(default=False)
 
