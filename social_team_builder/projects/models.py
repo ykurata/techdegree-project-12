@@ -49,6 +49,9 @@ class Position(models.Model):
     description = models.TextField(max_length=500)
     skill = models.CharField(max_length=20, choices=SKILLES_CHOICES, default="")
     position_filled = models.BooleanField(default=False)
+    applicants = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through='Application')
 
     def __str__(self):
         return self.title
