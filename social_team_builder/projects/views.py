@@ -57,7 +57,7 @@ def create_project(request, pk=None):
 
 @login_required
 def edit_project(request, pk):
-    """Update a project and positions"""
+    """Update the project and positions"""
     try:
         project = get_object_or_404(models.Project, pk=pk)
     except ObjectDoesNotExist:
@@ -92,13 +92,14 @@ def edit_project(request, pk):
 
 @login_required
 def confirm_delete(request, pk):
+    """Confirm deletion of a project"""
     project = get_object_or_404(models.Project, pk=pk)
     return render(request, 'projects/confirm_delete.html', {'project': project})
 
 
 @login_required
 def delete_project(request, pk):
-    """delete a prpject"""
+    """delete a project"""
     project = get_object_or_404(models.Project, pk=pk)
     project.delete()
     messages.success(request, "{} is deleted.".format(project.title))
@@ -155,7 +156,7 @@ def accept_application_list(request):
 
 @login_required
 def reject_application_list(request):
-    """Show a list of rejected application"""
+    """Show a list of rejected applications"""
     applications = models.Application.objects.filter(
         status="reject",
         position__project__user=request.user)
@@ -167,7 +168,7 @@ def reject_application_list(request):
 
 @login_required
 def new_application_list(request):
-    """Show a list of new applyed applications"""
+    """Show a list of new applied applications"""
     applications = models.Application.objects.filter(
         status="new",
         position__project__user=request.user)
