@@ -1,18 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-#from django.shortcuts import get_object_or_404, render
-
-
-from django.contrib.auth.mixins import(
-    LoginRequiredMixin,
-    PermissionRequiredMixin
-)
-from django.core.urlresolvers import reverse_lazy, reverse
-from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import generic
 
 from . import models
 from . import forms
@@ -22,6 +13,7 @@ from accounts.models import Skill
 
 @login_required
 def project_detail(request, pk):
+    """Show project detail"""
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(project_id=pk)
 
@@ -34,6 +26,7 @@ def project_detail(request, pk):
 
 @login_required
 def create_project(request, pk=None):
+    """Create a new project and positions"""
     form = forms.ProjectForm()
     position_formset = forms.PositionFormSet(
         queryset=models.Position.objects.none()
@@ -64,6 +57,7 @@ def create_project(request, pk=None):
 
 @login_required
 def edit_project(request, pk):
+    """Update a project and positions"""
     try:
         project = get_object_or_404(models.Project, pk=pk)
     except ObjectDoesNotExist:
@@ -98,6 +92,7 @@ def edit_project(request, pk):
 
 @login_required
 def delete_project(request, pk):
+    """delete a prpject"""
     project = get_object_or_404(models.Project, pk=pk)
     project.delete()
     messages.success(request, "{} is deleted.".format(project.title))
@@ -106,6 +101,7 @@ def delete_project(request, pk):
 
 @login_required
 def apply(request, position_pk, pk):
+    """Applying for a position"""
     position = get_object_or_404(models.Position, pk=position_pk)
     try:
         models.Application.objects.get(
@@ -131,6 +127,7 @@ def apply(request, position_pk, pk):
 
 @login_required
 def application_list(request):
+    """Show a list of all applications"""
     applications = models.Application.objects.all()
     projects = models.Project.objects.filter(user=request.user)
     return render(request, 'projects/application_list.html', {
@@ -140,6 +137,7 @@ def application_list(request):
 
 @login_required
 def accept_application_list(request):
+    """Show a list of accepted applications"""
     applications = models.Application.objects.filter(
         status="accept",
         position__project__user=request.user)
@@ -151,6 +149,7 @@ def accept_application_list(request):
 
 @login_required
 def reject_application_list(request):
+    """Show a list of rejected application"""
     applications = models.Application.objects.filter(
         status="reject",
         position__project__user=request.user)
@@ -162,6 +161,7 @@ def reject_application_list(request):
 
 @login_required
 def new_application_list(request):
+    """Show a list of new applyed applications"""
     applications = models.Application.objects.filter(
         status="new",
         position__project__user=request.user)
@@ -172,6 +172,7 @@ def new_application_list(request):
 
 
 def accept_application(request, pk):
+    """Accept an application view"""
     application = get_object_or_404(models.Application, pk=pk)
     application.status = "accept"
     application.position.status = True
@@ -186,6 +187,7 @@ def accept_application(request, pk):
 
 
 def reject_application(request, pk):
+    """Reject an application view"""
     application = get_object_or_404(models.Application, pk=pk)
     application.status = "reject"
     application.save()
@@ -199,6 +201,7 @@ def reject_application(request, pk):
 
 
 def notification(request):
+    """Show notifications for a login user"""
     try:
         notifications = models.Notification.objects.filter(user=request.user)
     except ObjectDoesNotExist:

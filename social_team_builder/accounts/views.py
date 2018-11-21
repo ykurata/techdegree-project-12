@@ -45,6 +45,7 @@ class SignUp(generic.CreateView):
 
 @login_required
 def profile_update(request, pk):
+    """Update user profile."""
     try:
         profile = models.User.objects.get(id=pk)
     except models.User.DoesNotExist:
@@ -78,6 +79,7 @@ def profile_update(request, pk):
 
 @login_required
 def profile_detail(request, pk):
+    """Show user's profile detail, skills, projects, and applyed projects"""
     profile = get_object_or_404(models.User, pk=pk)
     skills = models.Skill.objects.filter(user_id=pk)
     projects = Project.objects.filter(user_id=pk)
@@ -89,9 +91,3 @@ def profile_detail(request, pk):
             'skills': skills,
             'projects': projects ,
             'applications': applications })
-
-
-class ProfileDetail(LoginRequiredMixin, generic.DetailView):
-    model = models.User
-    fields = ("image", "bio", "skill")
-    template_name = "accounts/profile_detail.html"

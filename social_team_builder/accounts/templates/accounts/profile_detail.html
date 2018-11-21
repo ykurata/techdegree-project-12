@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load static from staticfiles %}
+{% load project_extras %}
 
 {% block body_content %}
 
@@ -18,7 +19,7 @@
     <div class="grid-70">
         <div class="circle--article--body">
               <h1>{{ profile.username }}</h1>
-              {{ profile.bio }}
+              {{ profile.bio | markdown_to_html }}
         </div>
 
         <h2>Past Projects</h2>

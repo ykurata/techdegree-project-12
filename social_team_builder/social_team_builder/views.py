@@ -14,6 +14,6 @@ class Home(ListView):
         if term:
             return Project.objects.filter(
                 Q(title__icontains=term) | Q(description__icontains=term)
-            )    
+            )
         else:
             return Project.objects.all()

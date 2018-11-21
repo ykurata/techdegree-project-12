@@ -30,11 +30,3 @@ PositionFormSet = forms.modelformset_factory(
     form=PositionForm,
     extra=1,
 )
-
-PositionInlineFormSet = forms.inlineformset_factory(
-    models.Project,
-    models.Position,
-    formset=PositionFormSet,
-    fields=("title", "description", "skill", "position_filled"),
-    can_delete=False,
-)
