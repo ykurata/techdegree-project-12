@@ -11,6 +11,7 @@ urlpatterns = [
     url(r"^(?P<pk>\d+)/apply/(?P<position_pk>\d+)/$",
         views.apply,
         name="apply"),
+    url(r"^(?P<pk>\d+)/delete/confirm/$", views.confirm_delete, name="confirm"),
     url(r"^(?P<pk>\d+)/delete/$", views.delete_project, name="delete"),
     url(r"^application/$",
         views.application_list,

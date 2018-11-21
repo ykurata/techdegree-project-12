@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% load static from staticfiles %}
+
+{% block body_content %}
+
+<div class="bounds circle--page">
+    <div class="circle--page--header grid-100">
+        <h2>Are you sure you want to delete {{ project.title }} ?</h2>
+        <br>
+        <div class="grid-100">
+            <a class="button button-text" href="{% url 'projects:delete' pk=project.pk %}">Yes</a>
+            <a class="button" href="{% url 'home' %}">Cancel</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

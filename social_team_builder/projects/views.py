@@ -91,6 +91,12 @@ def edit_project(request, pk):
 
 
 @login_required
+def confirm_delete(request, pk):
+    project = get_object_or_404(models.Project, pk=pk)
+    return render(request, 'projects/confirm_delete.html', {'project': project})
+
+
+@login_required
 def delete_project(request, pk):
     """delete a prpject"""
     project = get_object_or_404(models.Project, pk=pk)

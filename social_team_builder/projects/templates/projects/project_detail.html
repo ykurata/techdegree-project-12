@@ -9,7 +9,7 @@
         {% if project.user == request.user %}
             <div class="grid-100">
                 <a class="button" href="{% url "projects:project_edit" pk=project.pk %}">Edit Project</a>
-                <a class="button button-text" href="{% url "projects:delete" pk=project.pk %}">Delete Project</a>
+                <a class="button button-text" href="{% url "projects:confirm" pk=project.pk %}">Delete Project</a>
             </div>
         {% endif %}
         {% for message in messages %}
