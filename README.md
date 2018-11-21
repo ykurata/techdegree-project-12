@@ -34,6 +34,7 @@ requirements.txt` while your virtualenv is activated.
 * As a user of the site, I should be able to apply for a position in a project.
 * As a user of the site, I should be able to log out.
 
+
 ## Extra Credit
 
 * As a user of the site, I should get an email verification after sign up.
