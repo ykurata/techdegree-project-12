@@ -45,10 +45,14 @@ class Position(models.Model):
         null=True,
         related_name="positions",
         on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
-    skill = models.CharField(max_length=20, choices=SKILLES_CHOICES, default="")
-    position_filled = models.BooleanField(default=False)
+    title = models.CharField(max_length=100, blank=True)
+    description = models.TextField(max_length=500, blank=True)
+    skill = models.CharField(
+        max_length=20,
+        choices=SKILLES_CHOICES,
+        default="",
+        blank=True)
+    position_filled = models.BooleanField(default=False, blank=True)
     applicants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Application')
