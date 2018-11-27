@@ -28,13 +28,13 @@ def project_detail(request, pk):
 def create_project(request, pk=None):
     """Create a new project and positions"""
     form = forms.ProjectForm()
-    position_formset = forms.PositionFormSet(
+    position_formset = forms.PositionInlineFormSet(
         queryset=models.Position.objects.none()
     )
 
     if request.method == 'POST':
         form = forms.ProjectForm(request.POST)
-        position_formset = forms.PositionFormSet(
+        position_formset = forms.PositionInlineFormSet(
             request.POST,
             queryset=models.Position.objects.none()
         )
@@ -43,8 +43,10 @@ def create_project(request, pk=None):
             project = form.save(commit=False)
             project.user = request.user
             project.save()
-            position_formset = position_formset.save(commit=False)
-            for position in position_formset:
+            position_instance = position_formset.save(commit=False)
+            for obj in position_formset.deleted_objects:
+                obj.delete()
+            for position in position_instance:
                 position.project = project
                 position.save()
             return HttpResponseRedirect(reverse("home"))
@@ -58,18 +60,15 @@ def create_project(request, pk=None):
 @login_required
 def edit_project(request, pk):
     """Update the project and positions"""
-    try:
-        project = get_object_or_404(models.Project, pk=pk)
-    except ObjectDoesNotExist:
-        project = None
+    project = get_object_or_404(models.Project, pk=pk)
     form = forms.ProjectForm(instance=project)
-    position_formset = forms.PositionFormSet(
+    position_formset = forms.PositionInlineFormSet(
         queryset=models.Position.objects.filter(project_id=pk)
     )
 
     if request.method == 'POST':
         form = forms.ProjectForm(request.POST, instance=project)
-        position_formset = forms.PositionFormSet(
+        position_formset = forms.PositionInlineFormSet(
             request.POST,
             queryset=models.Position.objects.filter(project_id=pk)
         )
@@ -78,8 +77,10 @@ def edit_project(request, pk):
             project = form.save(commit=False)
             project.user = request.user
             project.save()
-            position_formset = position_formset.save(commit=False)
-            for position in position_formset:
+            position_instance = position_formset.save(commit=False)
+            for obj in position_formset.deleted_objects:
+                obj.delete()
+            for position in position_instance:
                 position.project = project
                 position.save()
             return HttpResponseRedirect(reverse("home"))

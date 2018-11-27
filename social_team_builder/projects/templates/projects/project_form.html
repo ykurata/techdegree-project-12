@@ -28,11 +28,18 @@
                 {{ position_formset.management_form }}
                     <ul class="circle--group--list circle--clone--list">
                         {% for position in position_formset %}
+                            {{ position.id }}
                             <li>
-                                {{ position }}
+                                <p style="padding:0; margin:0;">Title:</p>
+                                {{ position.title }}
+                                <p style="padding:0; margin-bottom:0; margin-top:30px;">Description:</p>
+                                {{ position.description }}
+                                <p style="padding:0; margin-bottom:0; margin-top:30px;">Skills:</p>
+                                {{ position.skill }}
+                                <p style="padding:0; margin-bottom:0; margin-top:30px;">Position filled: {{ position.position_filled }}</p>
                                 <br>
                                 <a class="circle--clone--add">Add Position</a>
-                                <a class="circle--clone--remove">Remove</a>
+                                <a style="margin-left:500px">{{ position.DELETE }}  Remove</a>
                             </li>
                         {% endfor %}
                     </ul>

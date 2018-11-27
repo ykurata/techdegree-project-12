@@ -50,9 +50,7 @@ def profile_update(request, pk):
     form = forms.ProfileForm(instance=profile)
     skill_formset = forms.SkillInlineFormSet(
         queryset=models.Skill.objects.filter(user_id=pk)
-        #queryset=form.instance.skill_set.all()
     )
-
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
         skill_formset = forms.SkillInlineFormSet(

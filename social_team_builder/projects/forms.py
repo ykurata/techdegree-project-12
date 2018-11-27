@@ -8,10 +8,9 @@ class ProjectForm(forms.ModelForm):
         fields = [
             "title",
             "description",
-             "estimated_time",
-             "requirements"
+            "estimated_time",
+            "requirements"
         ]
-
 
 
 class PositionForm(forms.ModelForm):
@@ -28,5 +27,15 @@ class PositionForm(forms.ModelForm):
 PositionFormSet = forms.modelformset_factory(
     models.Position,
     form=PositionForm,
+)
+
+
+PositionInlineFormSet = forms.inlineformset_factory(
+    models.Project,
+    models.Position,
     extra=1,
+    fields=('title', 'description', 'skill', 'position_filled', ),
+    formset=PositionFormSet,
+    min_num=1,
+    can_delete=True,
 )
