@@ -38,11 +38,11 @@
                   <ul class="circle--clone--list">
                       {{ skill_formset.management_form }}
                       {% for skill in skill_formset %}
-                          <li>
+                          {{ skill.id }}
+                          <li class="skill_forms">
                               {{ skill.name }}
-                              {{ skill.id.as_hidden }}
                               <a class="circle--clone--add">Add Skill</a>
-                              <a class="circle--clone--remove">Remove</a>
+                              <a style="margin-left:90px;">Remove {{ skill.DELETE }}</a>
                           </li>
                       {% endfor %}
                   </ul>
@@ -50,4 +50,7 @@
         </div>
     </div>
 </form>
+
+
+
 {% endblock %}

@@ -31,5 +31,14 @@ class SkillForm(forms.ModelForm):
 SkillFormSet = forms.modelformset_factory(
     models.Skill,
     form=SkillForm,
+)
+
+SkillInlineFormSet = forms.inlineformset_factory(
+    models.User,
+    models.Skill,
     extra=1,
+    fields=('name', ),
+    formset=SkillFormSet,
+    min_num=1,
+    can_delete=True,
 )

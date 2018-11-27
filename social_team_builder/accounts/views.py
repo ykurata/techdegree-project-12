@@ -46,32 +46,32 @@ class SignUp(generic.CreateView):
 @login_required
 def profile_update(request, pk):
     """Update user profile."""
-    try:
-        profile = models.User.objects.get(id=pk)
-    except models.User.DoesNotExist:
-        profile=None
+    profile = get_object_or_404(models.User, id=pk)
     form = forms.ProfileForm(instance=profile)
-    skill_formset = forms.SkillFormSet(
-        queryset=models.Skill.objects.filter(user=request.user)
+    skill_formset = forms.SkillInlineFormSet(
+        queryset=models.Skill.objects.filter(user_id=pk)
+        #queryset=form.instance.skill_set.all()
     )
 
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, request.FILES, instance=profile)
-        skill_formset = forms.SkillFormSet(
+        skill_formset = forms.SkillInlineFormSet(
             request.POST,
-            queryset=models.Skill.objects.filter(user=request.user)
-        )
+            queryset=models.Skill.objects.filter(user_id=pk)
+            )
 
         if form.is_valid() and skill_formset.is_valid():
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            skill_formset = skill_formset.save(commit=False)
-            for skill in skill_formset:
-                skill.user = request.user
+            skill_instance = skill_formset.save(commit=False)
+            for obj in skill_formset.deleted_objects:
+                obj.delete()
+            for skill in skill_instance:
+                skill.user=request.user
                 skill.save()
-
             return redirect('accounts:profile_detail', pk=request.user.id)
+
     return render(request, 'accounts/user_form.html', {
                 'form': form,
                 'skill_formset': skill_formset })
