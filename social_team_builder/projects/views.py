@@ -60,17 +60,25 @@ def create_project(request, pk=None):
 @login_required
 def edit_project(request, pk):
     """Update the project and positions"""
-    project = get_object_or_404(models.Project, pk=pk)
+    try:
+        project = models.Project.objects.get(pk=pk, user=request.user)
+    except ObjectDoesNotExist:
+        project = None
+
     form = forms.ProjectForm(instance=project)
     position_formset = forms.PositionInlineFormSet(
-        queryset=models.Position.objects.filter(project_id=pk)
+        queryset=models.Position.objects.filter(
+            project_id=pk,
+            project__user=request.user)
     )
 
     if request.method == 'POST':
         form = forms.ProjectForm(request.POST, instance=project)
         position_formset = forms.PositionInlineFormSet(
             request.POST,
-            queryset=models.Position.objects.filter(project_id=pk)
+            queryset=models.Position.objects.filter(
+                project_id=pk,
+                project__user=request.user)
         )
 
         if form.is_valid() and position_formset.is_valid():
@@ -94,14 +102,20 @@ def edit_project(request, pk):
 @login_required
 def confirm_delete(request, pk):
     """Confirm deletion of a project"""
-    project = get_object_or_404(models.Project, pk=pk)
+    try:
+        project = models.Project.objects.get(pk=pk, user=request.user)
+    except ObjectDoesNotExist:
+        project = None
     return render(request, 'projects/confirm_delete.html', {'project': project})
 
 
 @login_required
 def delete_project(request, pk):
     """delete a project"""
-    project = get_object_or_404(models.Project, pk=pk)
+    try:
+        project = models.Project.objects.get(pk=pk, user=request.user)
+    except ObjectDoesNotExist:
+        project = None
     project.delete()
     messages.success(request, "{} is deleted.".format(project.title))
     return redirect('home')
