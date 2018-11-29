@@ -36,7 +36,7 @@ SkillFormSet = forms.modelformset_factory(
 SkillInlineFormSet = forms.inlineformset_factory(
     models.User,
     models.Skill,
-    extra=1,
+    extra=3,
     fields=('name', ),
     formset=SkillFormSet,
     min_num=1,
