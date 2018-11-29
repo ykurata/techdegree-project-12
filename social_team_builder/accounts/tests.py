@@ -2,8 +2,6 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-
-
 from .models import User, Skill
 from .forms import UserCreateForm, ProfileForm, SkillForm
 
@@ -31,5 +29,3 @@ class UserModelTest(TestCase):
             name = "Python"
         )
         self.assertIn(skill, self.test_user.skill_set.all() )
-
-    
