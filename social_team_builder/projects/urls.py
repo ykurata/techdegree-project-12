@@ -33,5 +33,5 @@ urlpatterns = [
         name="new_application"),
     url(r"^notification/$",
         views.notification,
-        name="notification")
+        name="notification"),
 ]
