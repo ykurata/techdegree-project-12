@@ -36,5 +36,5 @@ PositionInlineFormSet = forms.inlineformset_factory(
     fields=('title', 'description', 'skill', 'position_filled', ),
     formset=PositionFormSet,
     can_delete=True,
-    extra=1,
+    extra=5,
 )

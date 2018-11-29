@@ -82,15 +82,13 @@ def edit_project(request, pk):
         )
 
         if form.is_valid() and position_formset.is_valid():
-            project = form.save(commit=False)
-            project.user = request.user
-            project.save()
+            form.save()
             position_instance = position_formset.save(commit=False)
-            for obj in position_formset.deleted_objects:
-                obj.delete()
             for position in position_instance:
                 position.project = project
                 position.save()
+            for position in position_formset.deleted_objects:
+                position.delete()
             return HttpResponseRedirect(reverse("home"))
 
     return render(request, 'projects/project_form.html', {
