@@ -148,7 +148,8 @@ def apply(request, position_pk, pk):
 @login_required
 def application_list(request):
     """Show a list of all applications"""
-    applications = models.Application.objects.all()
+    applications = models.Application.objects.filter(
+            position__project__user=request.user)
     projects = models.Project.objects.filter(user=request.user)
     return render(request, 'projects/application_list.html', {
             'applications': applications,
