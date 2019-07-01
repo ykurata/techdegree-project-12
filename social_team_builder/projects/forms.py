@@ -23,7 +23,7 @@ class PositionForm(forms.ModelForm):
             "position_filled"
         ]
 
-
+    
 PositionFormSet = forms.modelformset_factory(
     models.Position,
     form=PositionForm,
