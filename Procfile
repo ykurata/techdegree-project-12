@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath social_team_builder social_team_builder.wsgi --log-file -
