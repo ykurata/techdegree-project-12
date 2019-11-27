@@ -12,6 +12,7 @@ markdown2==2.3.5
 Pillow==5.3.0
 pycparser==2.19
 pycrypto==2.6.1
+pygobject==3.26.1
 pytz==2019.3
 pyxdg==0.25
 SecretStorage==2.3.1

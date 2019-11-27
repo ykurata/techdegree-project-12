@@ -1,12 +1,12 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 from django.db import models
 
 
 class Project(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     estimated_time = models.IntegerField()
@@ -64,9 +64,10 @@ class Position(models.Model):
 class Application(models.Model):
     applicant = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="applicaion"
+        related_name="applicaion",
+        on_delete=models.DO_NOTHING
     )
-    position = models.ForeignKey(Position)
+    position = models.ForeignKey(Position, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=20)
 
     def __str__(self):
@@ -76,9 +77,10 @@ class Application(models.Model):
 class Notification(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="notification"
+        related_name="notification",
+        on_delete=models.DO_NOTHING
     )
-    application = models.ForeignKey(Application)
+    application = models.ForeignKey(Application, on_delete=models.DO_NOTHING)
     message = models.CharField(max_length=50)
 
     def __str__(self):

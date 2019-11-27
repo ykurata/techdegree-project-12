@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin
 )
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse
 from django.db import models
 from django.utils import timezone
 
@@ -76,7 +76,7 @@ SKILLES_CHOICES = (
 )
 
 class Skill(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=20, choices=SKILLES_CHOICES)
 
     def __str__(self):
